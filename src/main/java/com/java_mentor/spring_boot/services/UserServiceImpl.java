@@ -18,14 +18,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserDetailsService,UserService {
-
-    @Autowired
-    RoleService roleRepository;
-
+    
+    private RoleService roleRepository;
     private UserRepository userRepository;
-
     @Autowired
-    public void setUserRepository(UserRepository userRepository) {
+    public UserServiceImpl(RoleService roleRepository, UserRepository userRepository) {
+        this.roleRepository = roleRepository;
         this.userRepository = userRepository;
     }
 
