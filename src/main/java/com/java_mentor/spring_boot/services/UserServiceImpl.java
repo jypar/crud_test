@@ -2,7 +2,6 @@ package com.java_mentor.spring_boot.services;
 
 import com.java_mentor.spring_boot.entities.Role;
 import com.java_mentor.spring_boot.entities.User;
-import com.java_mentor.spring_boot.repositories.RoleRepository;
 import com.java_mentor.spring_boot.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,11 +17,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserDetailsService,UserService {
-    
-    private RoleService roleRepository;
+
+    private RoleServiceImpl roleRepository;
     private UserRepository userRepository;
+
     @Autowired
-    public UserServiceImpl(RoleService roleRepository, UserRepository userRepository) {
+    public UserServiceImpl(RoleServiceImpl roleRepository, UserRepository userRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
     }

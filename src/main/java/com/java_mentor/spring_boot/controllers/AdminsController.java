@@ -2,7 +2,7 @@ package com.java_mentor.spring_boot.controllers;
 
 import com.java_mentor.spring_boot.entities.Role;
 import com.java_mentor.spring_boot.entities.User;
-import com.java_mentor.spring_boot.services.RoleService;
+import com.java_mentor.spring_boot.services.RoleServiceImpl;
 import com.java_mentor.spring_boot.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,15 +19,11 @@ import java.util.Set;
 public class AdminsController {
 
     private UserServiceImpl userService;
-    private RoleService roleService;
+    private RoleServiceImpl roleService;
 
     @Autowired
-    public void setUserService(UserServiceImpl userService) {
+    public AdminsController(UserServiceImpl userService, RoleServiceImpl roleService) {
         this.userService = userService;
-    }
-
-    @Autowired
-    public void setRoleService(RoleService roleService) {
         this.roleService = roleService;
     }
 

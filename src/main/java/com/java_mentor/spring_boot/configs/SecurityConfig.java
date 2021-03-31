@@ -1,5 +1,6 @@
 package com.java_mentor.spring_boot.configs;
 
+import com.java_mentor.spring_boot.configs.handler.LoginSuccessHandler;
 import com.java_mentor.spring_boot.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,21 +21,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserServiceImpl userService;
 
     @Autowired
-    public void setUserService(UserServiceImpl userService) {
+    public SecurityConfig(UserServiceImpl userService) {
         this.userService = userService;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin()
+                //.loginPage("/login")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .loginProcessingUrl("/login")
+                .successHandler(new LoginSuccessHandler())
                 .permitAll()
                 .and()
                 .logout().permitAll()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login?logout")
+                .logoutSuccessUrl("/login")
                 .and().csrf().disable();
         http
                 .authorizeRequests()
