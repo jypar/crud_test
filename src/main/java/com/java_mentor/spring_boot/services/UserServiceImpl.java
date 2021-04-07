@@ -1,29 +1,21 @@
 package com.java_mentor.spring_boot.services;
 
-import com.java_mentor.spring_boot.entities.Role;
 import com.java_mentor.spring_boot.entities.User;
 import com.java_mentor.spring_boot.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserDetailsService,UserService {
+public class UserServiceImpl implements UserService {
 
-    private RoleServiceImpl roleRepository;
     private UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(RoleServiceImpl roleRepository, UserRepository userRepository) {
-        this.roleRepository = roleRepository;
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -37,12 +29,7 @@ public class UserServiceImpl implements UserDetailsService,UserService {
             throw new UsernameNotFoundException("User not found");
         }
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(),
-                mapRolesToAuthorities(user.getRoles()));
-    }
-
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles){
-        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getName())).collect(Collectors.toList());
+        return user;
     }
 
     @Override
@@ -51,6 +38,7 @@ public class UserServiceImpl implements UserDetailsService,UserService {
     }
 
     public void remove(Long id){
+
         userRepository.deleteById(id);
     }
 
@@ -59,21 +47,4 @@ public class UserServiceImpl implements UserDetailsService,UserService {
         return userRepository.findAll();
     }
 
-    public User findById(Long id){
-        Optional<User> user = userRepository.findById(id);
-        return user.get();
-    }
-
-    public User getUserByName(String name){
-        return userRepository.findByUsername(name);
-    }
-
-
-    public Set<Role> getSetOfRoles(List<String> rolesId) {
-        Set<Role> roleSet = new HashSet<>();
-        for (String id: rolesId) {
-            roleSet.add(roleRepository.getRoleById(Long.parseLong(id)));
-        }
-        return roleSet;
-    }
 }

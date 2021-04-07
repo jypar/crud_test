@@ -2,8 +2,9 @@ package com.java_mentor.spring_boot.entities;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import javax.persistence.*;
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -20,6 +21,15 @@ public class User implements UserDetails {
     private String username; // уникальное значение
     @Column(nullable = false)
     private String password;
+    @Column(name = "lastname")
+    private String lastname;
+    @Column(name="age")
+    private Long age;
+    @Column(name = "email")
+    private String email;
+
+    public User() {
+    }
 
     @ManyToMany( fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
@@ -28,20 +38,46 @@ public class User implements UserDetails {
     )
     private Set<Role> roles = new HashSet<>();
 
-    public static UserDetails fromUser(User user) {
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),user.getPassword(),
-                user.isAccountNonExpired(), user.isCredentialsNonExpired(),
-                user.isEnabled(), user.isAccountNonLocked(),
-                user.getRoles()
-        );
-    }
     public void setUsername(String username) {
         this.username = username;
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = new BCryptPasswordEncoder(12,new SecureRandom()).encode(password);
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public Long getAge() {
+        return age;
+    }
+
+    public void setAge(Long age) {
+        this.age = age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Set<Role> getRoles() {
@@ -62,16 +98,6 @@ public class User implements UserDetails {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
     }
 
     @Override
@@ -97,5 +123,18 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }

@@ -1,7 +1,6 @@
 package com.java_mentor.spring_boot.entities;
 
 import org.springframework.security.core.GrantedAuthority;
-
 import javax.persistence.*;
 import java.util.Collection;
 
